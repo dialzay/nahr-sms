@@ -24,7 +24,7 @@ npm run dev
 Open http://localhost:3000 in your browser.
 
 🧪 Testing the Application
-Open the live demo at https://nahr-grid.vercel.app
+Open the live demo at https://nahr-sms.vercel.app
 
 View the crisis map - See 11 hospitals color-coded by water levels
 
