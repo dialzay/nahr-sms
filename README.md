@@ -1,4 +1,4 @@
-# 💧 Nahr Grid - Emergency Water Distribution System
+# 💧 Nahr Grid - Emergency Water Distribution System Team Vertex SU#18
 
 **🌊 "Nahr" means "River" in Arabic - Bringing life-giving water to those in need**
 
@@ -58,6 +58,8 @@ UI: shadcn/ui components
 Deployment: Vercel
 
 🙏 Credits & Acknowledgments
+Made by Zaina Fahad
+Team Members: Rakan Ibrahim, Zohaa Fahad and Minjae Song 
 OpenStreetMap for free mapping tiles
 
 Firebase for backend infrastructure
@@ -66,19 +68,9 @@ Leaflet.js for mapping library
 
 shadcn/ui for UI components
 
-The people of Sudan for inspiration
 
 📄 License
 MIT License - See LICENSE file for details.
 
 Nahr Grid: Because every drop counts in saving lives.
 
-text
-
-**This includes:**
-✅ Short description with name meaning  
-✅ Setup instructions with code blocks  
-✅ Testing instructions with bullet points  
-✅ Credits section  
-✅ License information  
-✅ Clean, professional formatting
