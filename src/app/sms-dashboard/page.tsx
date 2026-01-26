@@ -71,25 +71,7 @@ export default function SmsDashboardPage() {
         {/* SMS Dashboard Component */}
         <SMSDashboard />
 
-        {/* Demo Instructions */}
-        <div className="mt-12 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-yellow-800 mb-3">🎥 Video Demo Instructions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <div className="font-semibold text-gray-800">1. Show SMS Simulation</div>
-              <p className="text-sm text-gray-600">Click "Critical: 1,500L" button to simulate emergency SMS</p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-semibold text-gray-800">2. Explain the Flow</div>
-              <p className="text-sm text-gray-600">"Hospital texts → System processes → Map updates → Delivery scheduled"</p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-semibold text-gray-800">3. Connect to Map</div>
-              <p className="text-sm text-gray-600">Mention how this SMS would turn a hospital red on the crisis map</p>
-            </div>
-          </div>
-        </div>
-
+       
         {/* Emergency Contact */}
         <div className="mt-8 text-center text-sm text-gray-500">
           <p>
