@@ -9,7 +9,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            🚨 <span className="text-blue-600">Nahl Grid</span>
+            🚨 <span className="text-blue-600">Nahr Grid</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-700 mb-8">
             Emergency Water Distribution for Omdurman Hospitals
@@ -72,7 +72,7 @@ export default function Home() {
 
         {/* How It Works */}
         <div className="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-3xl p-8 md:p-12 mb-16">
-          <h2 className="text-3xl font-bold text-center mb-10">⚡ How Nahl Grid Works</h2>
+          <h2 className="text-3xl font-bold text-center mb-10">⚡ How Nahr Grid Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-4xl mb-4">1️⃣</div>
