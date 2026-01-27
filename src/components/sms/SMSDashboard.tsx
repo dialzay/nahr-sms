@@ -401,32 +401,4 @@ export default function SMSDashboard() {
         </div>
       </div>
 
-      {/* Real SMS Integration Note */}
-      <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-        <h3 className="text-lg font-bold text-gray-900 mb-3">📡 Real SMS Integration</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h4 className="font-semibold mb-2">Production Implementation:</h4>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Africa's Talking SMS API integration</li>
-              <li>Dedicated Sudanese phone number: +249 900 123 456</li>
-              <li>Automated SMS parsing and validation</li>
-              <li>Two-way SMS for confirmations</li>
-              <li>Bulk SMS alerts to communities</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Why SMS Works in Sudan:</h4>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-              <li>Works on any mobile phone (no smartphone needed)</li>
-              <li>No internet connection required</li>
-              <li>95%+ mobile penetration in Sudan</li>
-              <li>Reliable even with power outages</li>
-              <li>Familiar technology for hospital staff</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+    
