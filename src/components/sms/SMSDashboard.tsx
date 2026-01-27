@@ -351,7 +351,7 @@ export default function SMSDashboard() {
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    placeholder="Enter your SMS message here. The system will automatically append 'WATER' prefix and water amount if needed."
+                    placeholder="Enter your SMS message here."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     rows={4}
                   />
