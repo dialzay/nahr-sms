@@ -49,7 +49,6 @@ export default function SMSDashboard() {
   const [lastAction, setLastAction] = useState<string>('');
   const [showNewSMSForm, setShowNewSMSForm] = useState(false);
   const [selectedHospitals, setSelectedHospitals] = useState<string[]>([]);
-  const [waterAmount, setWaterAmount] = useState<string>('5000');
   const [sendDaily, setSendDaily] = useState(false);
   const [dailyTime, setDailyTime] = useState('09:00');
   const [enableBackupReminder, setEnableBackupReminder] = useState(true);
@@ -347,42 +346,17 @@ export default function SMSDashboard() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Water Amount (Liters)
-                  </label>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="range"
-                      min="1000"
-                      max="20000"
-                      step="100"
-                      value={waterAmount}
-                      onChange={(e) => setWaterAmount(e.target.value)}
-                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <div className="text-lg font-bold text-green-700 min-w-[100px]">
-                      {parseInt(waterAmount).toLocaleString()}L
-                    </div>
-                  </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-xs text-gray-500">1,000L</span>
-                    <span className="text-xs text-gray-500">10,000L</span>
-                    <span className="text-xs text-gray-500">20,000L</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Custom Message (Optional)
+                    SMS Message Content
                   </label>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
-                    placeholder="Add additional info (e.g., 'Water pressure low', 'Tank leaking', 'Emergency need')"
+                    placeholder="Enter your SMS message here. The system will automatically append 'WATER' prefix and water amount if needed."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    rows={3}
+                    rows={4}
                   />
                   <div className="text-xs text-gray-500 mt-1">
-                    Format: WATER {waterAmount}{customMessage ? ` ${customMessage}` : ''}
+                    Example: "WATER 5000" or "WATER 5000 Emergency need"
                   </div>
                 </div>
               </div>
@@ -457,18 +431,25 @@ export default function SMSDashboard() {
                     return;
                   }
                   
-                  // Send to selected hospitals
+                  // Generate a realistic water amount for each hospital
                   selectedHospitals.forEach(hospitalName => {
                     const hospital = hospitals.find(h => h.name === hospitalName);
                     if (hospital) {
+                      // Generate water amount based on hospital's daily usage
+                      const typicalAmount = hospital.dailyUsage * 2; // 2 days supply
+                      const randomVariation = Math.floor(Math.random() * 1000);
+                      const waterAmount = typicalAmount + randomVariation;
+                      
                       simulateSMS(
                         hospitals.indexOf(hospital),
-                        parseInt(waterAmount)
+                        waterAmount
                       );
                     }
                   });
                   
-                  const message = customMessage ? `WATER ${waterAmount} ${customMessage}` : `WATER ${waterAmount}`;
+                  const message = customMessage.trim() 
+                    ? customMessage 
+                    : "WATER [auto-generated amount]";
                   
                   setLastAction(`Sent SMS to ${selectedHospitals.length} hospital(s): ${message}`);
                   
@@ -478,7 +459,6 @@ export default function SMSDashboard() {
                   // Reset form
                   setSelectedHospitals([]);
                   setCustomMessage('');
-                  setWaterAmount('5000');
                   setSendDaily(false);
                   setShowNewSMSForm(false);
                 }}
@@ -492,7 +472,6 @@ export default function SMSDashboard() {
               <button
                 onClick={() => {
                   setSelectedHospitals([]);
-                  setWaterAmount('5000');
                   setCustomMessage('');
                   setSendDaily(false);
                   setEnableBackupReminder(true);
@@ -510,9 +489,9 @@ export default function SMSDashboard() {
                 Message Preview
               </h4>
               <div className="font-mono bg-white p-4 rounded border text-lg">
-                {customMessage 
-                  ? `WATER ${parseInt(waterAmount).toLocaleString()} ${customMessage}`
-                  : `WATER ${parseInt(waterAmount).toLocaleString()}`
+                {customMessage.trim() 
+                  ? customMessage 
+                  : "WATER [auto-generated amount based on hospital's daily usage]"
                 }
               </div>
               <div className="text-sm text-blue-600 mt-3">
