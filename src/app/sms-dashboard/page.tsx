@@ -1,85 +1,107 @@
-// src/app/sms-dashboard/page.tsx
-import SMSDashboard from '@/components/sms/SMSDashboard';
-import Link from 'next/link';
-import { ArrowLeft, MessageSquare } from 'lucide-react';
+// src/components/sms/SMSDashboard.tsx (Fallback)
+'use client';
 
-export default function SmsDashboardPage() {
+import { useState } from 'react';
+import { MessageSquare, Phone, Hospital, Clock, Bell, Send } from 'lucide-react';
+
+export default function SMSDashboard() {
+  const [messages, setMessages] = useState([
+    { id: 1, hospital: 'Omdurman Hospital', phone: '+249 91 200 0001', message: 'WATER 1500', time: '10:30 AM', status: 'critical' },
+    { id: 2, hospital: 'Al-Nau Hospital', phone: '+249 91 200 0002', message: 'WATER 12000', time: '09:45 AM', status: 'safe' },
+    { id: 3, hospital: "Children's Hospital", phone: '+249 91 200 0003', message: 'WATER 4500', time: '08:15 AM', status: 'warning' },
+  ]);
+
+  const simulateSMS = () => {
+    const hospitals = ['Omdurman Hospital', 'Al-Nau Hospital', 'Children\'s Hospital'];
+    const water = Math.floor(Math.random() * 15000) + 1000;
+    const status = water < 3000 ? 'critical' : water < 6000 ? 'warning' : 'safe';
+    
+    const newMsg = {
+      id: messages.length + 1,
+      hospital: hospitals[Math.floor(Math.random() * hospitals.length)],
+      phone: '+249 91 XXX XXXX',
+      message: `WATER ${water}`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status
+    };
+    
+    setMessages([newMsg, ...messages]);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Navigation Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/" 
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
-              >
-                <ArrowLeft size={20} />
-                <span>Back to Home</span>
-              </Link>
-              <div className="hidden md:block h-6 w-px bg-gray-300"></div>
-              <Link 
-                href="/map" 
-                className="text-blue-600 hover:text-blue-800 transition font-medium"
-              >
-                View Crisis Map →
-              </Link>
-            </div>
-            <div className="flex items-center gap-2">
-              <MessageSquare className="text-blue-500" size={20} />
-              <span className="font-semibold text-gray-900">Nahr Grid</span>
-            </div>
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+      <div className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Incoming SMS Messages</h2>
+            <p className="text-gray-600">Simulate hospital SMS reports to test the system</p>
           </div>
+          <button 
+            onClick={simulateSMS}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
+          >
+            <Bell size={20} />
+            Simulate Incoming SMS
+          </button>
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">
-            📱 SMS Monitoring Dashboard
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Real-time tracking of hospital water reports via SMS. Each message updates the crisis map and triggers emergency responses.
-          </p>
-        </div>
-
-        {/* Stats Banner */}
-        <div className="mb-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold">11</div>
-              <div className="text-sm opacity-90">Total Hospitals</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">24/7</div>
-              <div className="text-sm opacity-90">Monitoring</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">&lt;1 min</div>
-              <div className="text-sm opacity-90">Response Time</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">SMS</div>
-              <div className="text-sm opacity-90">Primary Protocol</div>
-            </div>
+      
+      <div className="p-6">
+        {messages.length === 0 ? (
+          <div className="text-center py-12">
+            <MessageSquare size={48} className="text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">No SMS messages yet</p>
+            <p className="text-gray-400 text-sm mt-1">Click the button above to simulate</p>
           </div>
-        </div>
-
-        {/* SMS Dashboard Component */}
-        <SMSDashboard />
-       
-        {/* Emergency Contact */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>
-            <strong>Emergency SMS Number:</strong> +249 900 123 456
-          </p>
-          <p className="mt-1">
-            Format: <code className="bg-gray-100 px-2 py-1 rounded">WATER [amount in liters]</code>
-          </p>
-        </div>
+        ) : (
+          <div className="space-y-4">
+            {messages.map((msg) => (
+              <div key={msg.id} className="border rounded-lg p-4 hover:bg-gray-50 transition">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${
+                      msg.status === 'critical' ? 'bg-red-100' :
+                      msg.status === 'warning' ? 'bg-yellow-100' :
+                      'bg-green-100'
+                    }`}>
+                      <Hospital className={
+                        msg.status === 'critical' ? 'text-red-600' :
+                        msg.status === 'warning' ? 'text-yellow-600' :
+                        'text-green-600'
+                      } size={20} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900">{msg.hospital}</h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Phone size={14} />
+                        <span>{msg.phone}</span>
+                        <Clock size={14} />
+                        <span>{msg.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      msg.status === 'critical' ? 'bg-red-100 text-red-800' :
+                      msg.status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {msg.status.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div className="font-mono text-blue-800">{msg.message}</div>
+                  <div className="text-sm text-blue-600 mt-1">
+                    Format: "WATER [AMOUNT_IN_LITERS]"
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
