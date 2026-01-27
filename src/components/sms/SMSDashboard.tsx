@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageSquare, Phone, Hospital, Clock, Bell, Send } from 'lucide-react';
+import { MessageSquare, Phone, Hospital, Clock, Bell, Send, Check } from 'lucide-react';
 
 interface SMSMessage {
   id: string;
@@ -47,6 +47,13 @@ export default function SMSDashboard() {
 
   const [autoSimulate, setAutoSimulate] = useState(true);
   const [lastAction, setLastAction] = useState<string>('');
+  const [showNewSMSForm, setShowNewSMSForm] = useState(false);
+  const [selectedHospitals, setSelectedHospitals] = useState<string[]>([]);
+  const [waterAmount, setWaterAmount] = useState<string>('5000');
+  const [sendDaily, setSendDaily] = useState(false);
+  const [dailyTime, setDailyTime] = useState('09:00');
+  const [enableBackupReminder, setEnableBackupReminder] = useState(true);
+  const [customMessage, setCustomMessage] = useState('');
 
   // Sample hospital data
   const hospitals = [
@@ -190,6 +197,14 @@ export default function SMSDashboard() {
               </button>
               
               <button
+                onClick={() => setShowNewSMSForm(true)}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2"
+              >
+                <Send size={20} />
+                Generate New SMS
+              </button>
+              
+              <button
                 onClick={clearMessages}
                 className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
               >
@@ -248,6 +263,275 @@ export default function SMSDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Generate New SMS Form */}
+      {showNewSMSForm && (
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <Send className="text-green-600" size={24} />
+              Generate New SMS Campaign
+            </h3>
+            <button
+              onClick={() => setShowNewSMSForm(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            {/* Hospital Selection */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Hospitals to Send SMS
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (selectedHospitals.length === hospitals.length) {
+                      setSelectedHospitals([]);
+                    } else {
+                      setSelectedHospitals(hospitals.map(h => h.name));
+                    }
+                  }}
+                  className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition"
+                >
+                  {selectedHospitals.length === hospitals.length ? 'Deselect All' : 'Select All'}
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {hospitals.map((hospital) => (
+                  <label
+                    key={hospital.name}
+                    className={`flex items-center p-3 border rounded-lg cursor-pointer transition ${
+                      selectedHospitals.includes(hospital.name)
+                        ? 'border-green-500 bg-green-50'
+                        : 'border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedHospitals.includes(hospital.name)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedHospitals([...selectedHospitals, hospital.name]);
+                          } else {
+                            setSelectedHospitals(selectedHospitals.filter(name => name !== hospital.name));
+                          }
+                        }}
+                        className="h-4 w-4 text-green-600 rounded focus:ring-green-500"
+                      />
+                      {selectedHospitals.includes(hospital.name) && (
+                        <Check size={16} className="ml-1 text-green-600" />
+                      )}
+                    </div>
+                    <div className="ml-3">
+                      <span className="text-sm font-medium text-gray-900">
+                        {hospital.name}
+                      </span>
+                      <p className="text-xs text-gray-500">
+                        {hospital.phone} • Daily: {hospital.dailyUsage}L
+                      </p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Message Configuration */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Water Amount (Liters)
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min="1000"
+                      max="20000"
+                      step="100"
+                      value={waterAmount}
+                      onChange={(e) => setWaterAmount(e.target.value)}
+                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="text-lg font-bold text-green-700 min-w-[100px]">
+                      {parseInt(waterAmount).toLocaleString()}L
+                    </div>
+                  </div>
+                  <div className="flex justify-between mt-1">
+                    <span className="text-xs text-gray-500">1,000L</span>
+                    <span className="text-xs text-gray-500">10,000L</span>
+                    <span className="text-xs text-gray-500">20,000L</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Custom Message (Optional)
+                  </label>
+                  <textarea
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    placeholder="Add additional info (e.g., 'Water pressure low', 'Tank leaking', 'Emergency need')"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    rows={3}
+                  />
+                  <div className="text-xs text-gray-500 mt-1">
+                    Format: WATER {waterAmount}{customMessage ? ` ${customMessage}` : ''}
+                  </div>
+                </div>
+              </div>
+
+              {/* Scheduling Options */}
+              <div className="space-y-6">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <label className="flex items-center gap-3 mb-3">
+                    <input
+                      type="checkbox"
+                      checked={sendDaily}
+                      onChange={(e) => setSendDaily(e.target.checked)}
+                      className="h-4 w-4 text-green-600 rounded"
+                    />
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">
+                        Send daily at specific time
+                      </span>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Automatically sends SMS every day at the selected time
+                      </p>
+                    </div>
+                  </label>
+                  
+                  {sendDaily && (
+                    <div className="ml-7 mt-3">
+                      <label className="block text-sm text-gray-600 mb-1">
+                        Daily send time
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="time"
+                          value={dailyTime}
+                          onChange={(e) => setDailyTime(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg w-32"
+                        />
+                        <span className="text-sm text-gray-500">
+                          Sudan Time (GMT+2)
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <label className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={enableBackupReminder}
+                      onChange={(e) => setEnableBackupReminder(e.target.checked)}
+                      className="h-4 w-4 text-blue-600 rounded"
+                    />
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">
+                        Enable backup reminder SMS
+                      </span>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Sends reminder after 24h if no response is received from hospital
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 pt-6 border-t">
+              <button
+                onClick={() => {
+                  if (selectedHospitals.length === 0) {
+                    alert('Please select at least one hospital');
+                    return;
+                  }
+                  
+                  // Send to selected hospitals
+                  selectedHospitals.forEach(hospitalName => {
+                    const hospital = hospitals.find(h => h.name === hospitalName);
+                    if (hospital) {
+                      simulateSMS(
+                        hospitals.indexOf(hospital),
+                        parseInt(waterAmount)
+                      );
+                    }
+                  });
+                  
+                  const message = customMessage ? `WATER ${waterAmount} ${customMessage}` : `WATER ${waterAmount}`;
+                  
+                  setLastAction(`Sent SMS to ${selectedHospitals.length} hospital(s): ${message}`);
+                  
+                  // Show success message
+                  alert(`✅ SMS sent to ${selectedHospitals.length} hospital(s)\n\nMessage: "${message}"\n${sendDaily ? `Will send daily at ${dailyTime}` : 'One-time only'}\n${enableBackupReminder ? 'Backup reminders enabled' : ''}`);
+                  
+                  // Reset form
+                  setSelectedHospitals([]);
+                  setCustomMessage('');
+                  setWaterAmount('5000');
+                  setSendDaily(false);
+                  setShowNewSMSForm(false);
+                }}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2"
+                disabled={selectedHospitals.length === 0}
+              >
+                <Send size={18} />
+                Send to {selectedHospitals.length} Selected Hospital(s)
+              </button>
+              
+              <button
+                onClick={() => {
+                  setSelectedHospitals([]);
+                  setWaterAmount('5000');
+                  setCustomMessage('');
+                  setSendDaily(false);
+                  setEnableBackupReminder(true);
+                }}
+                className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
+              >
+                Reset Form
+              </button>
+            </div>
+
+            {/* Preview */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+                <Bell size={16} />
+                Message Preview
+              </h4>
+              <div className="font-mono bg-white p-4 rounded border text-lg">
+                {customMessage 
+                  ? `WATER ${parseInt(waterAmount).toLocaleString()} ${customMessage}`
+                  : `WATER ${parseInt(waterAmount).toLocaleString()}`
+                }
+              </div>
+              <div className="text-sm text-blue-600 mt-3">
+                <div className="font-medium">Will be sent to:</div>
+                <div className="mt-1">
+                  {selectedHospitals.length === 0 
+                    ? 'No hospitals selected' 
+                    : selectedHospitals.map((h, i) => (
+                        <span key={h} className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2 mb-2">
+                          {h}
+                        </span>
+                      ))
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -400,5 +684,6 @@ export default function SMSDashboard() {
           </table>
         </div>
       </div>
-
-    
+    </div>
+  );
+}
