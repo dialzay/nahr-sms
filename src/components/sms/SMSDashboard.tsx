@@ -47,6 +47,21 @@ export default function SMSDashboard() {
 
   const [autoSimulate, setAutoSimulate] = useState(true);
   const [lastAction, setLastAction] = useState<string>('');
+  const demonstrateExecution = () => {
+    console.group('🚨 Nahr Grid - Code Execution Demo');
+    console.log('1️⃣ SMS Received: "WATER 1500"');
+    console.log('2️⃣ Parsing: Extracted 1500 liters');
+    console.log('3️⃣ Calculating: 1500L ÷ 2000L/day × 24 = 18 hours');
+    console.log('4️⃣ Status: 18h < 24h = WARNING 🟡');
+    console.log('5️⃣ Map Update: Hospital marker → YELLOW');
+    console.log('6️⃣ Trigger: Emergency delivery scheduled');
+    console.log('7️⃣ Supplier: SMS sent to water company');
+    console.log('8️⃣ Community: Alert sent to nearby residents');
+    console.groupEnd();
+    
+    // Also simulate an actual SMS
+    simulateSMS(0, 1500); // This calls your existing function
+  };
   const [showNewSMSForm, setShowNewSMSForm] = useState(false);
   const [selectedHospitals, setSelectedHospitals] = useState<string[]>([]);
   const [sendDaily, setSendDaily] = useState(false);
